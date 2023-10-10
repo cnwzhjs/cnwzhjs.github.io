@@ -4,6 +4,8 @@ path = "about"
 template = "about.html"
 +++
 
+[中文](/zh/about)
+
 > How many times must cannonballs fly,
 >
 > Before they're forever banned?
