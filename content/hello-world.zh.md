@@ -26,6 +26,6 @@ WordPress应该算是最广泛使用的博客软件了，但是它也有一个�
 如果你对我博客的技术选型感兴趣，这里是一个我选用的技术的列表：
 
 1. [Zola](https://www.getzola.org/): Rust写的静态网站生成器（你知道我是Rust语言的拥趸）
-2. [Even](https://github.com/getzola/even.git): 一个极简的，适合Blog写作的主体
+2. [Even](https://github.com/getzola/even.git): 一个极简的，适合Blog写作的主题
 3. GitHub Actions: 完成CI/CD
 4. GitHub Pages: Host我的静态网站

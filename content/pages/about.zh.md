@@ -18,7 +18,7 @@ template = "about.html"
 
 # 为什么我要建立这个网站？
 
-可以看看这篇文章 [Hello, world](../hello-world.zh.md).
+可以看看这篇文章 [Hello, world](/zh/hello-world).
 
 # 为什么要用这个名字
 
