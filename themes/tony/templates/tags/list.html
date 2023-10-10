@@ -1,0 +1,17 @@
+{% extends "index.html" %}
+
+{% block content %}
+    <article class="prose">
+        <ul>
+            {% for tag in terms %}
+                <li>
+                    <a href="{{ tag.permalink }}">
+                        {{ tag.name }}
+                    </a>
+                    <br />
+                    <span class="count">{{ tag.pages | length }} article(s)</span>
+                </li>
+            {% endfor %}
+        </ul>
+    </article>
+{% endblock content %}

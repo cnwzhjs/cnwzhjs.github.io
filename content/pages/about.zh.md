@@ -4,8 +4,6 @@ path = "zh/about"
 template = "about.html"
 +++
 
-[English](/about)
-
 > How many times must cannonballs fly,
 >
 > Before they're forever banned?
@@ -16,11 +14,11 @@ template = "about.html"
 
 通过这个博客，我希望能够跟大家分享一些我的经验、观点和心得。从技术教程到项目更新，再到对未来技术的思考，你都能在这里找到我对软件和创新的热情。
 
-# 为什么我要建立这个网站？
+### 为什么我要建立这个网站？
 
 可以看看这篇文章 [Hello, world](/zh/hello-world).
 
-# 为什么要用这个名字
+### 为什么要用这个名字
 
 起这个名字其实有两重原因：
 

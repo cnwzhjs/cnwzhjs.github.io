@@ -7,8 +7,6 @@ categories = ["misc"]
 tags = ["static site generator", "zola"]
 +++
 
-[中文](/zh/hello-world)
-
 I used to have a self-hosted WordPress instance for writing my blogs. However, I recently made the decision to switch to a static site generator. Let me explain why.
 
 <!-- more -->

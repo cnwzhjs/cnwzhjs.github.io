@@ -1,0 +1,19 @@
+name = "tony"
+description = "Tony's theme designed for my blog"
+license = "MIT"
+homepage = "https://github.com/cnwzhjs/cnwzhjs.github.io"
+min_version = "0.17.0"
+demo = "https://cnwzhjs.github.io"
+
+[extra]
+even_menu = [
+    {url = "$BASE_URL", name = "Home"},
+    {url = "$BASE_URL/categories", name = "Categories"},
+    {url = "$BASE_URL/tags", name = "Tags"},
+    {url = "$BASE_URL/about", name = "About"},
+]
+even_title = "Have a bite"
+
+[author]
+name = "Tony Huang"
+homepage = "https://cnwzhjs.github.io"

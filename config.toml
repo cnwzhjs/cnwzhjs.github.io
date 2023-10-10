@@ -5,7 +5,7 @@ title = "Have a bite"
 description = "Tony Huang's personal blogs"
 
 default_language = "en"
-theme = "even"
+theme = "tony"
 
 generate_feed = true
 feed_filename = "atom.xml"
@@ -41,3 +41,19 @@ external_links_target_blank = true
 # Put all your custom variables here
 author = "Tony Huang"
 even_title = "Have a bite"
+
+[extra.navbar]
+items = [
+    { lang = "en", links = [
+        { url = "/", name = "Home" },
+        { url = "/categories/", name = "Categories" },
+        { url = "/tags/", name = "Tags" },
+        { url = "/about/", name = "About" },
+    ] },
+    { lang = "zh", links = [
+        { url = "/zh/", name = "主页" },
+        { url = "/zh/categories/", name = "分类" },
+        { url = "/zh/tags/", name = "标签" },
+        { url = "/zh/about/", name = "关于" },
+    ] },
+]

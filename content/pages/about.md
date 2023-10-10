@@ -4,8 +4,6 @@ path = "about"
 template = "about.html"
 +++
 
-[中文](/zh/about)
-
 > How many times must cannonballs fly,
 >
 > Before they're forever banned?
@@ -16,11 +14,11 @@ Welcome to my personal blog site! I'm [Tony Huang](https://twitter.com/greatony)
 
 Through this blog, I aim to share my experiences, insights, and lessons learned along the way. From technical tutorials and project updates to thought-provoking discussions on the future of technology, you'll find a diverse range of content that reflects my passion for all things software and innovation.
 
-# Why do I setup this site?
+### Why do I setup this site?
 
 If you want to know more about why this site exists, please read [Hello, world](../hello-world.md).
 
-# Why the name
+### Why the name?
 
 There are multiple reasons for this name.
 

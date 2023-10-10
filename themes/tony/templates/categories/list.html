@@ -1,0 +1,17 @@
+{% extends "index.html" %}
+
+{% block content %}
+    <article class="prose">
+        <ul>
+            {% for category in terms %}
+                <li>
+                    <a href="{{ category.permalink }}">
+                        {{ category.name }}
+                    </a>
+                    <br />
+                    <span class="count">{{ category.pages | length }} article(s)</span>
+                </li>
+            {% endfor %}
+        </ul>
+    </article>
+{% endblock content %}

@@ -7,8 +7,6 @@ categories = ["misc"]
 tags = ["static site generator", "zola"]
 +++
 
-[English](/hello-world)
-
 几年前的时候，我自己在一个VPS主机上部署了一个Wordpress的实例，用来写博客。
 
 最近，我决定重新开始技术写作，一直在物色合适的博客平台。最后，我决定使用静态网站生成器来做这件事情，在本文中，我会说一下原因。

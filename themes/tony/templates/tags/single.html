@@ -1,0 +1,20 @@
+{% extends "index.html" %}
+
+{% block content %}
+    <header class="py-10">
+        <h1 class="text-3xl font-bold leading-tight tracking-tight text-gray-900">
+            {{ term.name }}
+        </h1>
+    </header>
+    <div class="posts">
+        {% for page in term.pages %}
+        <article class="prose">
+            {{ post_macros::title(page=page) }}
+            {{ page.summary | safe }}
+            <div class="read-more">
+                <a href="{{ page.permalink }}">Read more...</a>
+            </div>
+        </article>
+        {% endfor %}
+    </div>
+{% endblock content %}
