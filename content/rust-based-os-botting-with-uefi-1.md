@@ -7,6 +7,8 @@ categories = ["uefi-os"]
 tags = ["uefi", "efi", "os", "rust"]
 +++
 
+> All code of this tutorial can be accessed at my [GitHub repo](https://github.com/cnwzhjs/blog-uefi-os)
+
 ### Time to Write OS Tutorials in UEFI
 
 There are quite a lot of OS tutorials and YouTube videos out there. However, most of them are written to boot in BIOS mode.

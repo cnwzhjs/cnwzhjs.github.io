@@ -7,6 +7,8 @@ categories = ["uefi-os"]
 tags = ["uefi", "efi", "os", "rust"]
 +++
 
+> 所有的代码都可以从我的[GitHub repo](https://github.com/cnwzhjs/blog-uefi-os)获得
+
 ### 该用UEFI写操作系统教程了
 
 有很多操作系统教程和 YouTube 视频。然而，它们中的大多数都是为 BIOS 模式启动编写的。
