@@ -114,8 +114,6 @@ docker build --platform linux/x86_64 buildenv -t tonyos-buildenv
 
 ### Prepare a simplist kernel
 
-David Rheinsberg, the maintainer of the UEFI targets, also maintains a crate called [r-efi](https://github.com/r-efi/r-efi) that provides a Rust interface to UEFI. We can use this crate to get started quickly.
-
 1. Create the build script running in the build container: buildscript.sh
 
 ```bash
@@ -150,46 +148,21 @@ docker run -it \
 #![no_main]
 #![no_std]
 
-extern crate r_efi;
-
-use r_efi::efi;
-
-#[panic_handler]
-fn panic_handler(_info: &core::panic::PanicInfo) -> ! {
-    loop {}
-}
+use uefi::prelude::*;
+use uefi_services::*;
 
 const HELLO_STR: &str = "Hello, world. Press any key to return to UEFI firmware.";
 
-#[export_name = "efi_main"]
-pub extern "C" fn main(_h: efi::Handle, st: *mut efi::SystemTable) -> efi::Status {
-    let mut s = [0u16; HELLO_STR.len() + 1];
-    let mut i = 0usize;
-    for c in HELLO_STR.encode_utf16() {
-        s[i] = c;
-        i += 1;
-        if i >= s.len() {
-            break;
-        }
-    }
+#[entry]
+fn main(_handle: Handle, mut system_table: SystemTable<Boot>) -> Status {
+    uefi_services::init(&mut system_table).unwrap();
 
-    // Print "Hello World!".
-    let r =
-        unsafe { ((*(*st).con_out).output_string)((*st).con_out, s.as_ptr() as *mut efi::Char16) };
-    if r.is_error() {
-        return r;
-    }
+    println!("{}", HELLO_STR);
 
-    // Wait for key input, by waiting on the `wait_for_key` event hook.
-    let r = unsafe {
-        let mut x: usize = 0;
-        ((*(*st).boot_services).wait_for_event)(1, &mut (*(*st).con_in).wait_for_key, &mut x)
-    };
-    if r.is_error() {
-        return r;
-    }
+    let mut events = [ system_table.stdin().wait_for_key_event().unwrap() ];
+    system_table.boot_services().wait_for_event(&mut events).discard_errdata().unwrap();
 
-    efi::Status::SUCCESS
+    Status::SUCCESS
 }
 ```
 
@@ -207,7 +180,8 @@ build-stage = 1
 target = ["x86_64-unknown-uefi"]
 
 [dependencies]
-r-efi = "4"
+uefi = { version = "0.25", features = ["alloc"] }
+uefi-services = "0.22"
 
 # the profile used for `cargo build`
 [profile.dev]
@@ -227,3 +201,11 @@ Now, we can build and run our first UEFI kernel:
 ```
 
 ![UEFI Hello World](/images/uefi-first-boot.png)
+
+### Read more
+
+Next Article: [Fetch information about key hardware](/rust-based-os-booting-with-uefi-2/)
+
+### Change history
+
+1. 2023-10-24: migrate to `uefi` crate
