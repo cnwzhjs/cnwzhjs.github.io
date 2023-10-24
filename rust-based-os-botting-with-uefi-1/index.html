@@ -1,0 +1,431 @@
+<!doctype html>
+
+<html lang="en" class="h-full">
+
+<head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-2HTT4P5TRX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-2HTT4P5TRX');
+  </script>
+
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  
+    
+    <meta name="description" content="Tony Huang&#x27;s personal blogs" />
+    
+  
+
+  
+    
+      <title>Rust-based OS booting with UEFI (1) - Have a bite</title>
+    
+  
+
+  
+  <link rel="alternate" type="application/atom+xml" title="RSS" href="https://cnwzhjs.github.io/atom.xml">
+  
+
+  
+  <script type="text/javascript" src="/js/menu.js"></script>
+  
+
+  
+  <link href="/css/site.css" rel="stylesheet">
+  
+
+  
+  
+</head>
+
+<body class="h-full">
+  <div class="min-h-full">
+    
+    <nav class="border-b border-gray-200 bg-white">
+      <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div class="flex h-16 justify-between">
+          <div class="flex">
+            <div class="flex flex-shrink-0 items-center">
+              <span class="border-transparent text-blue-500 inline-flex items-center border-b-2 px-1 pt-1 text-sm font-medium">Have a bite</span>
+            </div>
+            <div class="hidden sm:-my-px sm:ml-6 sm:flex sm:space-x-8">
+              
+                
+                  
+                    
+                      <a href="&#x2F;" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center border-b-2 px-1 pt-1 text-sm font-medium">
+                        Home
+                      </a>
+                    
+                  
+                    
+                      <a href="&#x2F;categories&#x2F;" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center border-b-2 px-1 pt-1 text-sm font-medium">
+                        Categories
+                      </a>
+                    
+                  
+                    
+                      <a href="&#x2F;tags&#x2F;" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center border-b-2 px-1 pt-1 text-sm font-medium">
+                        Tags
+                      </a>
+                    
+                  
+                    
+                      <a href="&#x2F;about&#x2F;" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center border-b-2 px-1 pt-1 text-sm font-medium">
+                        About
+                      </a>
+                    
+                  
+                
+              
+                
+              
+            </div>
+          </div>
+          <div class="hidden sm:ml-6 sm:flex sm:items-center">
+            
+              <a href="/zh&#x2F;rust-based-os-botting-with-uefi-1&#x2F;" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center border-b-2 px-1 pt-1 text-sm font-medium">🇨🇳 中文</a>
+            
+          </div>
+          <div class="-mr-2 flex items-center sm:hidden">
+            <!-- Mobile menu button -->
+            <button id="menu-btn" type="button" class="relative inline-flex items-center justify-center rounded-md bg-white p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2" aria-controls="mobile-menu" aria-expanded="false">
+              <span class="absolute -inset-0.5"></span>
+              <span class="sr-only">Open main menu</span>
+              <!-- Menu open: "hidden", Menu closed: "block" -->
+              <svg id="menu-img" class="block h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+              </svg>
+              <!-- Menu open: "block", Menu closed: "hidden" -->
+              <svg id="close-img" class="hidden h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+  
+      <!-- Mobile menu, show/hide based on menu state. -->
+      <div class="sm:hidden hidden" id="mobile-menu">
+        <div class="space-y-1 pb-3 pt-2">
+          
+            
+              
+                
+                  <a href="&#x2F;" class="border-transparent text-gray-600 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-800 block border-l-4 py-2 pl-3 pr-4 text-base font-medium">
+                    Home
+                  </a>
+                
+              
+                
+                  <a href="&#x2F;categories&#x2F;" class="border-transparent text-gray-600 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-800 block border-l-4 py-2 pl-3 pr-4 text-base font-medium">
+                    Categories
+                  </a>
+                
+              
+                
+                  <a href="&#x2F;tags&#x2F;" class="border-transparent text-gray-600 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-800 block border-l-4 py-2 pl-3 pr-4 text-base font-medium">
+                    Tags
+                  </a>
+                
+              
+                
+                  <a href="&#x2F;about&#x2F;" class="border-transparent text-gray-600 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-800 block border-l-4 py-2 pl-3 pr-4 text-base font-medium">
+                    About
+                  </a>
+                
+              
+            
+          
+            
+          
+        </div>
+        <div class="border-t border-gray-200 pb-3 pt-4">
+          <div class="space-y-1">
+            
+              <a href="/zh&#x2F;rust-based-os-botting-with-uefi-1&#x2F;" class="border-transparent text-gray-600 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-800 block border-l-4 py-2 pl-3 pr-4 text-base font-medium">🇨🇳 中文</a>
+            
+          </div>
+        </div>
+      </div>
+    </nav>
+    
+
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      
+
+
+<div class="post-toc hidden" id="post-toc">
+    <h2 class="post-toc-title">Contents</h2>
+    <div class="post-toc-content always-active">
+        <nav id="TableOfContents">
+            <ul>
+                
+                <li>
+                    <a href="https://cnwzhjs.github.io/rust-based-os-botting-with-uefi-1/#time-to-write-os-tutorials-in-uefi" class="toc-link">Time to Write OS Tutorials in UEFI</a>
+                    
+                </li>
+                
+                <li>
+                    <a href="https://cnwzhjs.github.io/rust-based-os-botting-with-uefi-1/#setup-test-environment" class="toc-link">Setup Test Environment</a>
+                    
+                </li>
+                
+                <li>
+                    <a href="https://cnwzhjs.github.io/rust-based-os-botting-with-uefi-1/#prepare-a-build-environment" class="toc-link">Prepare a build environment</a>
+                    
+                </li>
+                
+                <li>
+                    <a href="https://cnwzhjs.github.io/rust-based-os-botting-with-uefi-1/#prepare-a-simplist-kernel" class="toc-link">Prepare a simplist kernel</a>
+                    
+                </li>
+                
+                <li>
+                    <a href="https://cnwzhjs.github.io/rust-based-os-botting-with-uefi-1/#build-and-run-your-first-uefi-kernel" class="toc-link">Build and run your first UEFI kernel</a>
+                    
+                </li>
+                
+                <li>
+                    <a href="https://cnwzhjs.github.io/rust-based-os-botting-with-uefi-1/#read-more" class="toc-link">Read more</a>
+                    
+                </li>
+                
+                <li>
+                    <a href="https://cnwzhjs.github.io/rust-based-os-botting-with-uefi-1/#change-history" class="toc-link">Change history</a>
+                    
+                </li>
+                
+            </ul>
+        </nav>
+    </div>
+</div>
+
+
+<article class="prose">
+    
+<h2>
+    <a href="https:&#x2F;&#x2F;cnwzhjs.github.io&#x2F;rust-based-os-botting-with-uefi-1&#x2F;">Rust-based OS booting with UEFI (1)</a>
+</h2>
+<div class="post__meta">
+    <span class="post__time">2023-10-15</span>
+    
+</div>
+
+    <div class="post-content">
+      <blockquote>
+<p>All code of this tutorial can be accessed at my <a rel="noopener" target="_blank" href="https://github.com/cnwzhjs/blog-uefi-os">GitHub repo</a></p>
+</blockquote>
+<h3 id="time-to-write-os-tutorials-in-uefi">Time to Write OS Tutorials in UEFI</h3>
+<p>There are quite a lot of OS tutorials and YouTube videos out there. However, most of them are written to boot in BIOS mode.</p>
+<p>However, it is 2023 now, 19 years since Intel open sourced UEFI. Meanwhile, Intel is trying to replace <code>x86_64</code> with <code>x86_64s</code>, which is a pure 64bit platform. And, of course, it will only support UEFI (UEFI CSM will be removed).</p>
+<p>UEFI is a more secure and more powerful booting system. Almost all modern operating system are booted via UEFI. There seems to be no reason to continue writing OS tutorials for BIOS. Taking care about switching to long mode, or enabling paging is no longer necessary, but annoying technology details.</p>
+<p>After searching Google, I see there are very limited information about writing OS in UEFI. The information are scattered in different places, and it is hard to find a complete tutorial. Therefore, I decided to write a series of tutorials about writing OS in UEFI.</p>
+<span id="continue-reading"></span><h3 id="setup-test-environment">Setup Test Environment</h3>
+<p>Most OS tutorials uses QEMU for the test environment for following benefits:</p>
+<ol>
+<li>Only requires normal user permission to execute (QEMU can run in a emulator mode, which means it doesn't need to access any hardware virtualization infrastructure, e.g. KVM).</li>
+<li>It is very flexible, to be configured with different hardware configurations.</li>
+<li>It support wide varieties of client CPU architectures. Additionaly, emulation can run on host CPUs with different architecture to client CPU.</li>
+<li>It supports emulating BIOS or UEFI as firmware interface.</li>
+<li>It supports debuggers, which ease debugging OS kernels (you usually uses logging to debug kernels on bare metal).</li>
+</ol>
+<p>Therefore, in this tutorial, we uses QEMU for the test environment as well. Well, I uses a MacBook Pro, so the tutorial's command lines are for macOS, but it is easy to translate to Linux version.</p>
+<ol>
+<li>Install QEMU</li>
+</ol>
+<p>We usually use <a rel="noopener" target="_blank" href="https://brew.sh">homebrew</a> to install qemu:</p>
+<pre data-lang="bash" style="background-color:#2b303b;color:#c0c5ce;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#bf616a;">brew</span><span> install qemu
+</span></code></pre>
+<ol start="2">
+<li>Create workspace for the project</li>
+</ol>
+<pre data-lang="bash" style="background-color:#2b303b;color:#c0c5ce;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#bf616a;">mkdir</span><span> tony-os &amp;&amp; </span><span style="color:#96b5b4;">cd</span><span> tony-os
+</span><span style="color:#bf616a;">git</span><span> init .
+</span><span style="color:#bf616a;">mkdir -p</span><span> src build buildenv {target,dist}/x86_64
+</span></code></pre>
+<ol start="3">
+<li>Prepare UEFI firmware for QEMU</li>
+</ol>
+<p>The open-sourced UEFI firmware from Intel is called the <a rel="noopener" target="_blank" href="http://www.tianocore.org">TianoCore project</a>. The code is also hosted on <a rel="noopener" target="_blank" href="https://github.com/tianocore">GitHub</a>.</p>
+<p>In this project, they developed a firmware supporting QEMU that provides a UEFI environment.</p>
+<p>We can just download it from the <a rel="noopener" target="_blank" href="https://www.kraxel.org/repos/jenkins/edk2/">CI artifacts server</a>, find a file starts with &quot;edk2.git-ovmf.x64&quot;, decompress it, and copy the <code>usr/share/edk2.git/ovmf-x64/OVMF-pure-efi.fd</code> to our workspace's <code>target/x86_64/bios.bin</code>.</p>
+<ol start="4">
+<li>Prepare the script to test our NON-EXIST under UEFI</li>
+</ol>
+<p>Write <code>run.sh</code> script under our workspace:</p>
+<pre data-lang="bash" style="background-color:#2b303b;color:#c0c5ce;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#65737e;">#! /bin/bash
+</span><span>
+</span><span style="color:#bf616a;">qemu-system-x86_64 </span><span>\
+</span><span style="color:#bf616a;">    -L</span><span> target/x86_64 \
+</span><span style="color:#bf616a;">    -bios</span><span> target/x86_64/bios.bin \
+</span><span style="color:#bf616a;">    -hda</span><span> fat:rw:dist/x86_64
+</span></code></pre>
+<p>Then, make it executable: <code>chmod +x run.sh</code>.</p>
+<p>If you run this script, it should start and showing an image of TianoCore.</p>
+<p>Now your workspace should be like this:</p>
+<pre data-lang="text" style="background-color:#2b303b;color:#c0c5ce;" class="language-text "><code class="language-text" data-lang="text"><span>build
+</span><span>buildenv
+</span><span>dist
+</span><span>|- x86_64
+</span><span>src
+</span><span>target
+</span><span>|- x86_64
+</span><span>   |- bios.bin
+</span><span>run.sh
+</span></code></pre>
+<h3 id="prepare-a-build-environment">Prepare a build environment</h3>
+<p>Docker is a perfect platform to solidify your build environment. Therefore, we can prepare a <code>Dockerfile</code> under the <code>buildenv</code> folder, to build an image of the build environment:</p>
+<pre data-lang="dockerfile" style="background-color:#2b303b;color:#c0c5ce;" class="language-dockerfile "><code class="language-dockerfile" data-lang="dockerfile"><span style="color:#b48ead;">FROM</span><span> rust:1.73-bullseye
+</span><span>
+</span><span style="color:#b48ead;">RUN </span><span>rustup target add x86_64-unknown-uefi
+</span><span>
+</span><span style="color:#b48ead;">VOLUME </span><span>/root/env
+</span><span>
+</span><span style="color:#b48ead;">WORKDIR </span><span>/root/env
+</span></code></pre>
+<blockquote>
+<p>Rust has tier 2 support for UEFI targets, which means it is not officially supported. However, it is good enough for us to write a toy OS.</p>
+<p>Thanks to David Rheinsberg(<a rel="noopener" target="_blank" href="https://github.com/dvdhrm">@dvdhrm</a>) and Nicholas Bishop(<a rel="noopener" target="_blank" href="https://github.com/nicholasbishop">@nicholasbishop</a>)</p>
+</blockquote>
+<p>Build the docker image:</p>
+<pre data-lang="bash" style="background-color:#2b303b;color:#c0c5ce;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#bf616a;">docker</span><span> build</span><span style="color:#bf616a;"> --platform</span><span> linux/x86_64 buildenv</span><span style="color:#bf616a;"> -t</span><span> tonyos-buildenv
+</span></code></pre>
+<h3 id="prepare-a-simplist-kernel">Prepare a simplist kernel</h3>
+<ol>
+<li>Create the build script running in the build container: buildscript.sh</li>
+</ol>
+<pre data-lang="bash" style="background-color:#2b303b;color:#c0c5ce;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#65737e;">#! /bin/bash
+</span><span>
+</span><span style="color:#65737e;"># build the kernel
+</span><span style="color:#bf616a;">cargo</span><span> build</span><span style="color:#bf616a;"> --target</span><span> x86_64-unknown-uefi || </span><span style="color:#96b5b4;">exit</span><span> 1
+</span><span>
+</span><span style="color:#65737e;"># copy the built kernel to the dist directory
+</span><span style="color:#bf616a;">mkdir -p</span><span> dist/x86_64/EFI/BOOT || </span><span style="color:#96b5b4;">exit</span><span> 1
+</span><span>
+</span><span style="color:#bf616a;">cp</span><span> target/x86_64-unknown-uefi/debug/tonyos.efi \
+</span><span>   dist/x86_64/EFI/BOOT/BOOTX64.EFI || </span><span style="color:#96b5b4;">exit</span><span> 1
+</span></code></pre>
+<ol start="2">
+<li>Create the build script to invoke the container: build.sh</li>
+</ol>
+<pre data-lang="bash" style="background-color:#2b303b;color:#c0c5ce;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#65737e;">#! /bin/bash
+</span><span>
+</span><span style="color:#bf616a;">docker</span><span> run</span><span style="color:#bf616a;"> -it </span><span>\
+</span><span style="color:#bf616a;">    --platform</span><span> linux/x86_64 \
+</span><span style="color:#bf616a;">    --rm </span><span>\
+</span><span style="color:#bf616a;">    -v </span><span>$(</span><span style="color:#bf616a;">pwd</span><span>):/root/env \
+</span><span>    tonyos-buildenv \
+</span><span>    ./buildscript.sh
+</span></code></pre>
+<ol start="3">
+<li>Prepare the kernel entry file <code>src/main.rs</code></li>
+</ol>
+<pre data-lang="rust" style="background-color:#2b303b;color:#c0c5ce;" class="language-rust "><code class="language-rust" data-lang="rust"><span>#![</span><span style="color:#bf616a;">no_main</span><span>]
+</span><span>#![</span><span style="color:#bf616a;">no_std</span><span>]
+</span><span>
+</span><span style="color:#b48ead;">use </span><span>uefi::prelude::*;
+</span><span style="color:#b48ead;">use </span><span>uefi_services::*;
+</span><span>
+</span><span style="color:#b48ead;">const </span><span style="color:#d08770;">HELLO_STR</span><span>: &amp;</span><span style="color:#b48ead;">str </span><span>= &quot;</span><span style="color:#a3be8c;">Hello, world. Press any key to return to UEFI firmware.</span><span>&quot;;
+</span><span>
+</span><span>#[</span><span style="color:#bf616a;">entry</span><span>]
+</span><span style="color:#b48ead;">fn </span><span style="color:#8fa1b3;">main</span><span>(</span><span style="color:#bf616a;">_handle</span><span>: Handle, </span><span style="color:#b48ead;">mut </span><span style="color:#bf616a;">system_table</span><span>: SystemTable&lt;Boot&gt;) -&gt; Status {
+</span><span>    uefi_services::init(&amp;</span><span style="color:#b48ead;">mut</span><span> system_table).</span><span style="color:#96b5b4;">unwrap</span><span>();
+</span><span>
+</span><span>    println!(&quot;</span><span style="color:#d08770;">{}</span><span>&quot;, </span><span style="color:#d08770;">HELLO_STR</span><span>);
+</span><span>
+</span><span>    </span><span style="color:#b48ead;">let mut</span><span> events = [ system_table.</span><span style="color:#96b5b4;">stdin</span><span>().</span><span style="color:#96b5b4;">wait_for_key_event</span><span>().</span><span style="color:#96b5b4;">unwrap</span><span>() ];
+</span><span>    system_table.</span><span style="color:#96b5b4;">boot_services</span><span>().</span><span style="color:#96b5b4;">wait_for_event</span><span>(&amp;</span><span style="color:#b48ead;">mut</span><span> events).</span><span style="color:#96b5b4;">discard_errdata</span><span>().</span><span style="color:#96b5b4;">unwrap</span><span>();
+</span><span>
+</span><span>    Status::</span><span style="color:#d08770;">SUCCESS
+</span><span>}
+</span></code></pre>
+<ol start="4">
+<li>Prepare the <code>Cargo.toml</code> file</li>
+</ol>
+<pre data-lang="toml" style="background-color:#2b303b;color:#c0c5ce;" class="language-toml "><code class="language-toml" data-lang="toml"><span>[package]
+</span><span style="color:#bf616a;">name </span><span>= &quot;</span><span style="color:#a3be8c;">tonyos</span><span>&quot;
+</span><span style="color:#bf616a;">version </span><span>= &quot;</span><span style="color:#a3be8c;">0.1.0</span><span>&quot;
+</span><span style="color:#bf616a;">authors </span><span>= [&quot;</span><span style="color:#a3be8c;">Tony Huang &lt;tony@tonyhuang.dev&gt;</span><span>&quot;]
+</span><span style="color:#bf616a;">edition </span><span>= &quot;</span><span style="color:#a3be8c;">2021</span><span>&quot;
+</span><span>
+</span><span>[build]
+</span><span style="color:#bf616a;">build-stage </span><span>= </span><span style="color:#d08770;">1
+</span><span style="color:#bf616a;">target </span><span>= [&quot;</span><span style="color:#a3be8c;">x86_64-unknown-uefi</span><span>&quot;]
+</span><span>
+</span><span>[dependencies]
+</span><span style="color:#bf616a;">uefi </span><span>= { </span><span style="color:#bf616a;">version </span><span>= &quot;</span><span style="color:#a3be8c;">0.25</span><span>&quot;, </span><span style="color:#bf616a;">features </span><span>= [&quot;</span><span style="color:#a3be8c;">alloc</span><span>&quot;] }
+</span><span style="color:#bf616a;">uefi-services </span><span>= &quot;</span><span style="color:#a3be8c;">0.22</span><span>&quot;
+</span><span>
+</span><span style="color:#65737e;"># the profile used for `cargo build`
+</span><span>[profile.dev]
+</span><span style="color:#bf616a;">panic </span><span>= &quot;</span><span style="color:#a3be8c;">abort</span><span>&quot; </span><span style="color:#65737e;"># disable stack unwinding on panic
+</span><span>
+</span><span style="color:#65737e;"># the profile used for `cargo build --release`
+</span><span>[profile.release]
+</span><span style="color:#bf616a;">panic </span><span>= &quot;</span><span style="color:#a3be8c;">abort</span><span>&quot; </span><span style="color:#65737e;"># disable stack unwinding on panic
+</span></code></pre>
+<h3 id="build-and-run-your-first-uefi-kernel">Build and run your first UEFI kernel</h3>
+<p>Now, we can build and run our first UEFI kernel:</p>
+<pre data-lang="bash" style="background-color:#2b303b;color:#c0c5ce;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#bf616a;">./build.sh </span><span>&amp;&amp; </span><span style="color:#bf616a;">./run.sh
+</span></code></pre>
+<p><img src="/images/uefi-first-boot.png" alt="UEFI Hello World" /></p>
+<h3 id="read-more">Read more</h3>
+<p>Next Article: <a href="/rust-based-os-booting-with-uefi-2/">Fetch information about key hardware</a></p>
+<h3 id="change-history">Change history</h3>
+<ol>
+<li>2023-10-24: migrate to <code>uefi</code> crate</li>
+</ol>
+
+    </div>
+
+    
+    
+
+    <div class="post-footer">
+        
+            
+                <div class="post-tags">
+                    
+                        <a href="https://cnwzhjs.github.io/tags/uefi/">#uefi</a>
+                    
+                        <a href="https://cnwzhjs.github.io/tags/efi/">#efi</a>
+                    
+                        <a href="https://cnwzhjs.github.io/tags/os/">#os</a>
+                    
+                        <a href="https://cnwzhjs.github.io/tags/rust/">#rust</a>
+                    
+                </div>
+            
+            
+                <div class="post-nav">
+                    
+                        <a class="previous" href="https:&#x2F;&#x2F;cnwzhjs.github.io&#x2F;rust-based-os-booting-with-uefi-2&#x2F;">‹ Rust-based OS booting with UEFI (2)</a>
+                    
+                    
+                        <a class="next" href="https:&#x2F;&#x2F;cnwzhjs.github.io&#x2F;hello-world&#x2F;">Hello, world ›</a>
+                    
+                </div>
+            
+
+        
+
+    </div>
+
+    
+    
+</article>
+
+
+    </div>
+  </div>
+</body>
+
+</html>

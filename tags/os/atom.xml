@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
+    <title>Have a bite - os</title>
+    <subtitle>Tony Huang&#x27;s personal blogs</subtitle>
+    <link href="https://cnwzhjs.github.io/tags/os/atom.xml" rel="self" type="application/atom+xml"/>
+    <link href="https://cnwzhjs.github.io"/>
+    <generator uri="https://www.getzola.org/">Zola</generator>
+    <updated>2023-10-24T00:00:00+00:00</updated>
+    <id>https://cnwzhjs.github.io/tags/os/atom.xml</id>
+    <entry xml:lang="en">
+        <title>Rust-based OS booting with UEFI (2)</title>
+        <published>2023-10-24T00:00:00+00:00</published>
+        <updated>2023-10-24T00:00:00+00:00</updated>
+        <author>
+          <name>Unknown</name>
+        </author>
+        <link rel="alternate" href="https://cnwzhjs.github.io/rust-based-os-booting-with-uefi-2/" type="text/html"/>
+        <id>https://cnwzhjs.github.io/rust-based-os-booting-with-uefi-2/</id>
+        
+        <summary type="html">&lt;blockquote&gt;
+&lt;p&gt;All code of this tutorial can be accessed at my &lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;github.com&#x2F;cnwzhjs&#x2F;blog-uefi-os&quot;&gt;GitHub repo&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;h3 id=&quot;what-is-an-os&quot;&gt;What is an OS?&lt;&#x2F;h3&gt;
+&lt;p&gt;In modern days, the word &#x27;OS&#x27; may denote many things.&lt;&#x2F;p&gt;
+&lt;p&gt;OS can be used to name a kernel, e.g. Linux, Mach (the kernel of macOS), and etc.&lt;&#x2F;p&gt;
+&lt;p&gt;OS can also be used to name a kernel and a set of userland programs, e.g. GNU&#x2F;Linux, macOS, and etc.&lt;&#x2F;p&gt;
+&lt;p&gt;In this series of articles, we mainly focus on the kernel part of an OS.&lt;&#x2F;p&gt;
+&lt;p&gt;In term of an OS kernel, let&#x27;s talk about what tasks should be done by an OS kernel.&lt;&#x2F;p&gt;
+&lt;p&gt;The major role of an OS kernel is to provide a virtualization abstraction of hardware resources, and to provide a set of APIs for userland programs to use these resources.&lt;&#x2F;p&gt;
+&lt;p&gt;In this definition, an OS kernel should:&lt;&#x2F;p&gt;
+&lt;ol&gt;
+&lt;li&gt;Manages computational (CPU, GPU, application specific accelerators) and storage resources (memory, disks, and etc.), and distribute them to userland programs.&lt;&#x2F;li&gt;
+&lt;li&gt;Provides a unified interface to operate periphrals (keyboard, mouse, network, and etc.).&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;p&gt;Therefore, in this episode, we will try to detect the core hardware resources of the device via UEFI interface:&lt;&#x2F;p&gt;
+&lt;ol&gt;
+&lt;li&gt;CPU&lt;&#x2F;li&gt;
+&lt;li&gt;Memory layout&lt;&#x2F;li&gt;
+&lt;li&gt;Graphics&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+</summary>
+        
+    </entry>
+    <entry xml:lang="en">
+        <title>Rust-based OS booting with UEFI (1)</title>
+        <published>2023-10-15T00:00:00+00:00</published>
+        <updated>2023-10-15T00:00:00+00:00</updated>
+        <author>
+          <name>Unknown</name>
+        </author>
+        <link rel="alternate" href="https://cnwzhjs.github.io/rust-based-os-botting-with-uefi-1/" type="text/html"/>
+        <id>https://cnwzhjs.github.io/rust-based-os-botting-with-uefi-1/</id>
+        
+        <summary type="html">&lt;blockquote&gt;
+&lt;p&gt;All code of this tutorial can be accessed at my &lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;github.com&#x2F;cnwzhjs&#x2F;blog-uefi-os&quot;&gt;GitHub repo&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;h3 id=&quot;time-to-write-os-tutorials-in-uefi&quot;&gt;Time to Write OS Tutorials in UEFI&lt;&#x2F;h3&gt;
+&lt;p&gt;There are quite a lot of OS tutorials and YouTube videos out there. However, most of them are written to boot in BIOS mode.&lt;&#x2F;p&gt;
+&lt;p&gt;However, it is 2023 now, 19 years since Intel open sourced UEFI. Meanwhile, Intel is trying to replace &lt;code&gt;x86_64&lt;&#x2F;code&gt; with &lt;code&gt;x86_64s&lt;&#x2F;code&gt;, which is a pure 64bit platform. And, of course, it will only support UEFI (UEFI CSM will be removed).&lt;&#x2F;p&gt;
+&lt;p&gt;UEFI is a more secure and more powerful booting system. Almost all modern operating system are booted via UEFI. There seems to be no reason to continue writing OS tutorials for BIOS. Taking care about switching to long mode, or enabling paging is no longer necessary, but annoying technology details.&lt;&#x2F;p&gt;
+&lt;p&gt;After searching Google, I see there are very limited information about writing OS in UEFI. The information are scattered in different places, and it is hard to find a complete tutorial. Therefore, I decided to write a series of tutorials about writing OS in UEFI.&lt;&#x2F;p&gt;
+</summary>
+        
+    </entry>
+</feed>

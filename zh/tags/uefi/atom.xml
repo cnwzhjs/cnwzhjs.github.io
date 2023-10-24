@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="zh">
+    <title> - uefi</title>
+    <link href="https://cnwzhjs.github.io/zh/tags/uefi/atom.xml" rel="self" type="application/atom+xml"/>
+    <link href="https://cnwzhjs.github.io"/>
+    <generator uri="https://www.getzola.org/">Zola</generator>
+    <updated>2023-10-24T00:00:00+00:00</updated>
+    <id>https://cnwzhjs.github.io/zh/tags/uefi/atom.xml</id>
+    <entry xml:lang="zh">
+        <title>用Rust写一个支持UEFI的操作系统 (2)</title>
+        <published>2023-10-24T00:00:00+00:00</published>
+        <updated>2023-10-24T00:00:00+00:00</updated>
+        <author>
+          <name>Unknown</name>
+        </author>
+        <link rel="alternate" href="https://cnwzhjs.github.io/zh/rust-based-os-booting-with-uefi-2/" type="text/html"/>
+        <id>https://cnwzhjs.github.io/zh/rust-based-os-booting-with-uefi-2/</id>
+        
+        <summary type="html">&lt;blockquote&gt;
+&lt;p&gt;所有的代码都可以从我的&lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;github.com&#x2F;cnwzhjs&#x2F;blog-uefi-os&quot;&gt;GitHub repo&lt;&#x2F;a&gt;获得&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;h3 id=&quot;shi-yao-shi-cao-zuo-xi-tong&quot;&gt;什么是操作系统&lt;&#x2F;h3&gt;
+&lt;p&gt;在现代语境下，OS这个单词可能代表很多东西。&lt;&#x2F;p&gt;
+&lt;p&gt;OS可以用来命名一个内核，例如Linux，Mach（macOS的内核）等。OS也可以用来命名一个内核和一组用户空间程序，例如GNU&#x2F;Linux，macOS等。&lt;&#x2F;p&gt;
+&lt;p&gt;在本系列文章中，我们主要关注OS内核的部分。那么OS的内核主要做什么呢？&lt;&#x2F;p&gt;
+&lt;p&gt;OS内核的主要作用是提供硬件资源的虚拟化抽象，并为用户空间程序提供一组API来使用这些资源。&lt;&#x2F;p&gt;
+&lt;p&gt;在这个定义中，OS内核应该：&lt;&#x2F;p&gt;
+&lt;ol&gt;
+&lt;li&gt;管理计算（CPU，GPU，应用程序特定加速器）和存储资源（内存，磁盘等），并将它们分配给用户空间程序。&lt;&#x2F;li&gt;
+&lt;li&gt;提供一个统一的接口来操作外设（键盘，鼠标，网络等）。&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;p&gt;所以，在这篇文章中，我们会尝试通过UEFI接口检测设备的核心硬件资源：&lt;&#x2F;p&gt;
+&lt;ol&gt;
+&lt;li&gt;CPU&lt;&#x2F;li&gt;
+&lt;li&gt;内存布局&lt;&#x2F;li&gt;
+&lt;li&gt;图形&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+</summary>
+        
+    </entry>
+    <entry xml:lang="zh">
+        <title>用Rust写一个支持UEFI的操作系统 (1)</title>
+        <published>2023-10-15T00:00:00+00:00</published>
+        <updated>2023-10-15T00:00:00+00:00</updated>
+        <author>
+          <name>Unknown</name>
+        </author>
+        <link rel="alternate" href="https://cnwzhjs.github.io/zh/rust-based-os-botting-with-uefi-1/" type="text/html"/>
+        <id>https://cnwzhjs.github.io/zh/rust-based-os-botting-with-uefi-1/</id>
+        
+        <summary type="html">&lt;blockquote&gt;
+&lt;p&gt;所有的代码都可以从我的&lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;github.com&#x2F;cnwzhjs&#x2F;blog-uefi-os&quot;&gt;GitHub repo&lt;&#x2F;a&gt;获得&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;h3 id=&quot;gai-yong-uefixie-cao-zuo-xi-tong-jiao-cheng-liao&quot;&gt;该用UEFI写操作系统教程了&lt;&#x2F;h3&gt;
+&lt;p&gt;有很多操作系统教程和 YouTube 视频。然而，它们中的大多数都是为 BIOS 模式启动编写的。&lt;&#x2F;p&gt;
+&lt;p&gt;然而，现在已经2023年了，离Intel开源UEFI的实现已经整整19年了。同时，Intel正在抛弃传统的&lt;code&gt;x86_64&lt;&#x2F;code&gt;架构，转向只支持64位的&lt;code&gt;x86_64s&lt;&#x2F;code&gt;. 当然，它只支持UEFI（UEFI CSM将被删除）。&lt;&#x2F;p&gt;
+&lt;p&gt;UEFI是一个更安全、更强大的引导系统。几乎所有现代操作系统都是通过UEFI引导的。似乎没有理由继续为BIOS编写操作系统教程。我们不再需要关心如何切换到长模式，或者启用分页之类的烦人细节。&lt;&#x2F;p&gt;
+&lt;p&gt;我在Google上搜索后发现，关于在UEFI中编写操作系统的信息非常有限。这些信息分散在不同的地方，很难找到完整的教程。因此，我决定写一系列关于在UEFI中编写操作系统的教程。&lt;&#x2F;p&gt;
+</summary>
+        
+    </entry>
+</feed>
